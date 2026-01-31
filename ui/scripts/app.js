@@ -38,6 +38,31 @@ function rerender() {
 	);
 }
 
+function currentFolderPathFromCURRENT() {
+	// Your pathOf(CURRENT) returns ["repo", ...segments]
+	const parts = pathOf(CURRENT); // e.g. ["repo","src","auth"]
+	parts.shift(); // remove "repo"
+	return parts.join("/"); // "src/auth" or ""
+}
+
+async function updateEditor() {
+	const textarea = document.getElementById("notes"); // change if your id differs
+	const label = document.getElementById("editor-path"); // optional
+	if (!textarea) return;
+
+	// pathOf(CURRENT) -> ["repo","src","auth"]
+	const parts = pathOf(CURRENT).slice(1); // drop "repo"
+	const folderPath = parts.join("/"); // "" means root
+
+	if (label) label.textContent = parts.length ? parts.join(" / ") : "repo";
+
+	await loadReadmeFromFolder(folderPath, (text, found) => {
+		textarea.value = text || "";
+		// optional: show what file was loaded
+		// console.log("Loaded:", found);
+	});
+}
+
 async function load() {
 	const parsed = parseGitHubUrl($("#repoUrl").value);
 	if (!parsed) return setMessage("Invalid GitHub URL", true);
@@ -48,6 +73,12 @@ async function load() {
 			`https://api.github.com/repos/${parsed.owner}/${parsed.repo}`,
 		);
 		const branch = repo.default_branch;
+		window.GITATLAS_CTX = {
+			owner: parsed.owner,
+			repo: parsed.repo,
+			branch,
+		};
+
 		const info = await gh(
 			`https://api.github.com/repos/${parsed.owner}/${parsed.repo}/branches/${branch}`,
 		);
@@ -60,6 +91,8 @@ async function load() {
 		CURRENT = FULL_ROOT;
 
 		rerender();
+		updateEditor();
+
 		setStatus("Loaded");
 	} catch (e) {
 		setMessage(e.message, true);
@@ -76,11 +109,13 @@ backBtn.onclick = () => {
 	if (CURRENT.parent) {
 		CURRENT = CURRENT.parent;
 		rerender();
+		updateEditor();
 	}
 };
 rootBtn.onclick = () => {
 	CURRENT = FULL_ROOT;
 	rerender();
+	updateEditor();
 };
 exportBtn.onclick = exportSVG;
 localBtn.onclick = loadLocal;

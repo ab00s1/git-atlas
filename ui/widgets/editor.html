@@ -1,0 +1,90 @@
+<aside class="editor-panel" aria-label="Notes editor">
+	<div class="editor-head">
+		<div class="editor-title">
+			Notes (<span id="editor-path">path</span>)
+		</div>
+
+		<div class="editor-actions"></div>
+	</div>
+
+	<textarea
+		readonly
+		id="notes"
+		spellcheck="false"
+		placeholder="Write notes for this folder…"
+	></textarea>
+
+	<div class="editor-foot"></div>
+</aside>;
+
+
+<style>
+/* ---------- right editor panel ---------- */
+.editor-panel {
+	border-left: 1px solid var(--border);
+	background: #fbfcfd;
+	display: flex;
+	flex-direction: column;
+	min-width: 320px;
+	height: 100%;
+}
+
+.editor-head {
+	padding: 12px;
+	border-bottom: 1px solid var(--border);
+	background: #fff;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.editor-title {
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+.editor-path {
+	font-family:
+		ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	font-size: 12px;
+	color: var(--muted);
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.editor-actions {
+	display: flex;
+	gap: 10px;
+}
+
+.editor-actions button {
+	width: auto;
+}
+
+#notes {
+	flex: 1;
+	width: 100%;
+	border: none;
+	outline: none;
+	padding: 12px;
+	background: #fff;
+	font-family:
+		ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	font-size: 12px;
+	line-height: 1.5;
+	resize: none;
+}
+
+.editor-foot {
+	border-top: 1px solid var(--border);
+	background: #fff;
+	padding: 10px 12px;
+	font-size: 12px;
+	color: var(--muted);
+}
+
+</style>
+
